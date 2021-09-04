@@ -1,38 +1,18 @@
-// делаем класс CountdownTimer варик 2
-
-// const daysEl = document.querySelector('[data-value="days"]');
-// // console.log(daysEl.textContent);
-// const hoursEl = document.querySelector('[data-value="hours"]');
-// // console.log(hoursEl.textContent);
-// const minsEl = document.querySelector('[data-value="mins"]');
-// // console.log(minsEl.textContent);
-// const secsEl = document.querySelector('[data-value="secs"]');
-// // console.log(secsEl.textContent);
 const bodyEl = document.querySelector('body');
-// console.log(bodyEl);
 
 class CountdownTimer {
     constructor(selector, targetDate, onTick) {
         this.selector = selector;
         this.targetDate = targetDate;
         this.onTick = onTick;
-    
   }
     start() {
-        // const targetDate = new Date('Sep 17, 2021');
         setInterval(() => {
             const currentTime = Date.now();
             const deltaTime = this.targetDate - currentTime;
-            // console.log(deltaTime);
             const { days, hours, mins, secs } = this.getTimeComponents(deltaTime);
-            // console.log('Это разница между конечным и текущим временем', deltaTime);
-            console.log(`${days}:${hours}:${mins}:${secs}`);
-            // console.log(days,hours,mins,secs);
+            // console.log(`${days}:${hours}:${mins}:${secs}`);
             this.onTick({ days, hours, mins, secs });
-            // daysEl.textContent = `${ days }:`;
-            // hoursEl.textContent = `${hours}:`;
-            // minsEl.textContent = `${mins}:`;
-            // secsEl.textContent = secs;
         }, 1000);
     }
     getTimeComponents(time) {
@@ -48,28 +28,12 @@ class CountdownTimer {
     }
 };
 
-
-
-
-  
-const timerOne = new CountdownTimer('timer-1', new Date('Sep 17, 2021'), updateClockface);
-// CountdownTimer.start();
-// console.log(timerOne);
-
 function updateClockface({ days, hours, mins, secs }) {
     daysEl.textContent = `${ days }:`;
     hoursEl.textContent = `${hours}:`;
     minsEl.textContent = `${mins}:`;
     secsEl.textContent = secs;
 }
-
-timerOne.start();
-
-const timerTwo = new CountdownTimer('timer-2', new Date('Oct 17, 2021'), updateClockface);
-// CountdownTimer.start();
-console.log(timerTwo);
-
-timerTwo.start();
 
 function createTimer(timerName) {
     return `
@@ -96,19 +60,13 @@ function createTimer(timerName) {
     </div>
     `
 }
-const timerRenderOne = createTimer.bind(timerOne);
-const timerRenderTwo = createTimer.bind(timerTwo);
 
+const timerOne = new CountdownTimer('timer-1', new Date('Sep 17, 2021'), updateClockface);
+timerOne.start();
 
-
-bodyEl.insertAdjacentHTML('beforeend', timerRenderOne());
-bodyEl.insertAdjacentHTML('beforeend', timerRenderTwo());
+bodyEl.insertAdjacentHTML('beforeend', createTimer.bind(timerOne)());
 
 const daysEl = document.querySelector('[data-value="days"]');
-// console.log(daysEl.textContent);
 const hoursEl = document.querySelector('[data-value="hours"]');
-// console.log(hoursEl.textContent);
 const minsEl = document.querySelector('[data-value="mins"]');
-// console.log(minsEl.textContent);
 const secsEl = document.querySelector('[data-value="secs"]');
-// console.log(secsEl.textContent);
