@@ -1,18 +1,21 @@
+// вариант с динамическим созданием разметки творого и последующих таймеров,
+// в разметке нужно закомментировать второй таймер, либо заменить id timer-2 на другой
 const bodyEl = document.querySelector('body');
 
 class CountdownTimer {
-    constructor(selector, targetDate, onTick) {
+    constructor(selector, targetDate) {
         this.selector = selector;
         this.targetDate = targetDate;
-        this.onTick = onTick;
+        // this.onTick = onTick;
   }
     start() {
         setInterval(() => {
+            const id = this.selector;
             const currentTime = Date.now();
             const deltaTime = this.targetDate - currentTime;
             const { days, hours, mins, secs } = this.getTimeComponents(deltaTime);
-            // console.log(`${days}:${hours}:${mins}:${secs}`);
-            this.onTick({ days, hours, mins, secs });
+            console.log(`${days}:${hours}:${mins}:${secs}`, this.selector);
+            this.updateClockface({ days, hours, mins, secs });
         }, 1000);
     }
     getTimeComponents(time) {
@@ -26,14 +29,19 @@ class CountdownTimer {
     pad(value) {
         return String(value).padStart(2, '0');
     }
-};
-
-function updateClockface({ days, hours, mins, secs }) {
+    updateClockface({ days, hours, mins, secs }) {
+        const idEl = document.getElementById(this.selector);
+        const daysEl = idEl.querySelector('[data-value="days"]');
+        const hoursEl = idEl.querySelector('[data-value="hours"]');
+        const minsEl = idEl.querySelector('[data-value="mins"]');
+        const secsEl = idEl.querySelector('[data-value="secs"]');
     daysEl.textContent = `${ days }:`;
     hoursEl.textContent = `${hours}:`;
     minsEl.textContent = `${mins}:`;
     secsEl.textContent = secs;
+    
 }
+};
 
 function createTimer(timerName) {
     return `
@@ -61,12 +69,9 @@ function createTimer(timerName) {
     `
 }
 
-const timerOne = new CountdownTimer('timer-1', new Date('Sep 17, 2021'), updateClockface);
+const timerOne = new CountdownTimer('timer-1', new Date('Sep 17, 2021'));
 timerOne.start();
 
-bodyEl.insertAdjacentHTML('beforeend', createTimer.bind(timerOne)());
-
-const daysEl = document.querySelector('[data-value="days"]');
-const hoursEl = document.querySelector('[data-value="hours"]');
-const minsEl = document.querySelector('[data-value="mins"]');
-const secsEl = document.querySelector('[data-value="secs"]');
+const timerTwo = new CountdownTimer('timer-2', new Date('Oct 17, 2021'));
+timerTwo.start();
+bodyEl.insertAdjacentHTML('beforeend', createTimer.bind(timerTwo)());
